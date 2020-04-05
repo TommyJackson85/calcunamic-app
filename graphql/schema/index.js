@@ -1,5 +1,16 @@
 const { buildSchema } = require('graphql');
 module.exports = buildSchema(`
+    type Number {
+        _id: ID!
+        value: Float!
+        link: String!
+        description: String!
+        dataType: String!
+        collectionIn: Collection!
+        creator: User!
+        createdAt: String!
+        updatedAt: String!
+    }
     type Collection {
         _id: ID!
         title: String!
@@ -14,6 +25,13 @@ module.exports = buildSchema(`
         password: String
         createdCollections: [Collection!]
     }
+    input NumberInput {
+        value: Float!
+        link: String!
+        description: String!
+        dataType: String!
+        collectionID: ID!
+    }
     input CollectionInput {
         title: String!
         description: String!
@@ -26,8 +44,11 @@ module.exports = buildSchema(`
     }
     type RootQuery {
         collections: [Collection!]!
+        numbers: [Number!]!
     }
     type RootMutation {
+        createNumber(numberInput: NumberInput): Number
+        deleteNumber(numberId: ID!): Collection
         createCollection(collectionInput: CollectionInput): Collection
         createUser(userInput: UserInput): User
     }
