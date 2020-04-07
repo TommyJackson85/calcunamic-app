@@ -25,6 +25,12 @@ module.exports = buildSchema(`
         password: String
         createdCollections: [Collection!]
     }
+    type AuthData {
+        userId: ID!
+        token: String!
+        tokenExpiration: Int!
+    }
+
     input NumberInput {
         value: Float!
         link: String!
@@ -45,6 +51,7 @@ module.exports = buildSchema(`
     type RootQuery {
         collections: [Collection!]!
         numbers: [Number!]!
+        login(email: String!, password: String!): AuthData!
     }
     type RootMutation {
         createNumber(numberInput: NumberInput): Number

@@ -1,8 +1,12 @@
 const Collection = require('../../models/collection');
 const { transformCollection } = require('./merge');
+const User = require('../../models/user');
 
 module.exports = {
-    collections: async () => {
+    collections: async (args, req) => {
+    if(!req.isAuth){
+      throw new Error('Unauthorized!');
+    }
     try {
       const collections = await Collection.find();
       return collections.map(collection => {
@@ -12,19 +16,22 @@ module.exports = {
       throw err;
     }
   },
-  createCollection: async args => {
+  createCollection: async (args, req) => {
+    if(!req.isAuth){
+      throw new Error('Unauthorized!');
+    }
     const collection = new Collection({
       title: args.collectionInput.title,
       description: args.collectionInput.description,
       numbers: +args.collectionInput.numbers,
       date: dateToString(args.collectionInput.date),
-      creator: '5e8273a778945f1a8a5f9751'
+      creator: req.userId
     });
     let createdCollection;
     try {
       const result = await collection.save();
       createdCollection = transformCollection(result);
-      const creator = await User.findById('5e8273a778945f1a8a5f9751');
+      const creator = await User.findById(req.userId);
 
       if (!creator) {
         throw new Error('User not found.');
