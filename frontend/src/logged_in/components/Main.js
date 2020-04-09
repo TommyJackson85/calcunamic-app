@@ -9,6 +9,8 @@ import smoothScrollTop from "../../shared/functions/smoothScrollTop";
 import persons from "../dummy_data/persons";
 import LazyLoadAddBalanceDialog from "./subscription/LazyLoadAddBalanceDialog";
 
+import AuthContext from "../../context/auth-context";
+
 const styles = theme => ({
   main: {
     marginLeft: theme.spacing(9),
@@ -45,6 +47,8 @@ class Main extends PureComponent {
     isAccountActivated: false,
     addBalanceDialogOpen: false
   };
+
+  static contextType = AuthContext;
 
   componentDidMount() {
     this.fetchRandomTargets();

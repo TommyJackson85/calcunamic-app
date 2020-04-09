@@ -58,7 +58,8 @@ function FormDialog(props) {
       />
       <DialogContent className={classes.dialogContent}>
         <form onSubmit={onFormSubmit}>
-          <div>{content}</div>
+          <div>
+          {content}</div>
           <Box width="100%" className={classes.actions}>
             {actions}
           </Box>

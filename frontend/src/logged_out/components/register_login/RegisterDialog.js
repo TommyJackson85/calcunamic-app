@@ -31,20 +31,63 @@ const styles = theme => ({
 });
 
 class RegisterDialog extends PureComponent {
+  /*constructor(props) {
+    super(props);
+    this.emailEl = React.createRef();
+    this.passwordEl = React.createRef();
+  }*/
   state = { loading: false, termsOfServiceError: false };
 
   register = () => {
+    const email =  this.registerEmail.value;
+    const password = this.registerPassword.value;
+    const passwordRepeat = this.registerPasswordRepeat.value;
+  
     const { setStatus } = this.props;
+
     if (!this.registerTermsCheckbox.checked) {
       this.setState({ termsOfServiceError: true });
       return;
     }
-    if (this.registerPassword.value !== this.registerPasswordRepeat.value) {
+    if (password !== passwordRepeat) {
       setStatus("passwordsDontMatch");
       return;
     }
     setStatus(null);
+    console.log(`email: ${email}, password: ${password}`);
+    const requestBody = { 
+      query:`
+        mutation {
+          createUser(userInput: {email: "${email}", password: "${password}"}){
+            _id
+            email
+          }
+        }
+      `
+    };
     this.setState({ loading: true });
+
+    fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => {
+        if (res.status !== 200 && res.status !== 201) {
+          console.log(res);
+          throw new Error('Failed!');
+        }
+        return res.json();
+      })
+      .then(resData => {
+        console.log(resData);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    
     setTimeout(() => {
       this.setState({ loading: false });
     }, 1500);
@@ -82,6 +125,7 @@ class RegisterDialog extends PureComponent {
               error={status === "invalidEmail"}
               label="Email Address"
               inputRef={node => {
+                console.log(node);
                 this.registerEmail = node;
               }}
               autoFocus

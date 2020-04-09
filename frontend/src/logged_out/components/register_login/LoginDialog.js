@@ -13,6 +13,7 @@ import {
 import FormDialog from "../../../shared/components/FormDialog";
 import HighlightedInformation from "../../../shared/components/HighlightedInformation";
 import ButtonCircularProgress from "../../../shared/components/ButtonCircularProgress";
+import AuthContext from "../../../context/auth-context";
 
 const styles = theme => ({
   forgotPassword: {
@@ -36,33 +37,77 @@ const styles = theme => ({
 });
 
 class LoginDialog extends PureComponent {
-  state = { loading: false };
-
+  state = { 
+    loggedIn: false,
+    loading: false 
+  };
+  static contextType = AuthContext;
   login = () => {
     const { setStatus, history } = this.props;
+    const email =  this.loginEmail.value;
+    const password = this.loginPassword.value;
+
+    const requestBody = {
+      query: `
+        query {
+          login(email: "${email}", password: "${password}") {
+            userId
+            token
+            tokenExpiration
+          }
+        }
+      `
+    };
     this.setState({
       loading: true
     });
     setStatus(null);
-    if (this.loginEmail.value !== "test@web.com") {
+    /*if (email !== "test@web.com") {
       setTimeout(() => {
         setStatus("invalidEmail");
         this.setState({
           loading: false
         });
       }, 1500);
-    } else if (this.loginPassword.value !== "test") {
+    } else if (password !== "test") {
       setTimeout(() => {
         setStatus("invalidPassword");
         this.setState({
           loading: false
         });
       }, 1500);
-    } else {
+    } else {*/
+      fetch('http://localhost:8000/graphql', {
+        method: 'POST',
+        body: JSON.stringify(requestBody),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(res => {
+          if (res.status !== 200 && res.status !== 201) {
+            console.log("NEW ERROR!!");
+            console.log(res);
+            throw new Error('Failed!');
+          }
+          return res.json();
+        })
+        .then(resData => {
+          console.log(resData);
+          if(resData.data.login.token) {
+            this.context.login(
+              resData.data.login.token,
+              resData.data.login.userId,
+              resData.data.login.tokenExpiration
+            )
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
       setTimeout(() => {
         history.push("/c/dashboard");
       }, 150);
-    }
   };
 
   render() {

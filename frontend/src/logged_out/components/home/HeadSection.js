@@ -95,7 +95,7 @@ const styles = theme => ({
 });
 
 function HeadSection(props) {
-  const { classes, theme, width } = props;
+  const { classes, width } = props;//theme removed because its not currently used
   return (
     <Fragment>
       <div className={classNames("lg-p-top", classes.wrapper)}>

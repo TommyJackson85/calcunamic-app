@@ -43,6 +43,14 @@ function SideDrawer(props) {
         </Box>
       </Toolbar>
       <Divider />
+      <Typography variant="h6">Logout</Typography>
+          <IconButton
+            onClick={onClose}
+            color="primary"
+            aria-label="Close Sidedrawer"
+          >
+            <CloseIcon />
+        </IconButton>
     </Drawer>
   );
 }
