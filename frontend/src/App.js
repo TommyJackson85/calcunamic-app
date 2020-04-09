@@ -25,6 +25,7 @@ class App extends Component {
   
   render() {
     console.log(this.state.token);
+    console.log(this.state.userId);
     return (
       <BrowserRouter>
         <MuiThemeProvider theme={theme}>
@@ -35,12 +36,15 @@ class App extends Component {
             token: this.state.token,
             userId: this.state.userId,
             login: this.login,
-            logout: this.
+            logout: this.logout
             }}
           >
             <Suspense fallback={<Fragment />}>
                 <Switch>
                   {!this.state.token && <Redirect from="/c" to="/" exact />}
+                  {!this.state.token && <Redirect from="/c/dashboard" to="/" exact />}
+                  {!this.state.token && <Redirect from="/c/posts" to="/" exact />}
+                  {!this.state.token && <Redirect from="/c/subscription" to="/" exact />}
                   {this.state.token && <Redirect from="/" to="/c" exact />}
                   {!this.state.token && (
                     <Route path="/">

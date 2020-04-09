@@ -32,6 +32,8 @@ import Balance from "./Balance";
 import NavigationDrawer from "../../../shared/components/NavigationDrawer";
 import profilePicture from "../../dummy_data/images/profilePicture.jpg";
 
+import AuthContext from "../../../context/auth-context";
+
 const styles = theme => ({
   appBar: {
     boxShadow: theme.shadows[6],
@@ -127,9 +129,9 @@ const styles = theme => ({
   }
 });
 
+
 class NavBar extends PureComponent {
   state = { mobileOpen: false, sideDrawerOpen: false };
-
   // Will be use to make website more accessible by screen readers
   links = [];
 
@@ -149,6 +151,9 @@ class NavBar extends PureComponent {
     this.setState({ sideDrawerOpen: true });
   };
 
+  logout = () => {
+    //
+  }
   render() {
     const { mobileOpen, sideDrawerOpen } = this.state;
     const {
@@ -158,6 +163,7 @@ class NavBar extends PureComponent {
       width,
       openAddBalanceDialog
     } = this.props;
+    const context = AuthContext.Consumer.context;
     const menuItems = [
       {
         link: "/c/dashboard",
@@ -213,16 +219,6 @@ class NavBar extends PureComponent {
             />
           ),
           mobile: <AccountBalanceIcon className="text-white" />
-        }
-      },
-      {
-        link: "/",
-        name: "Logout",
-        icon: {
-          desktop: (
-            <PowerSettingsNewIcon className="text-white" fontSize="small" />
-          ),
-          mobile: <PowerSettingsNewIcon className="text-white" />
         }
       }
     ];
@@ -344,6 +340,7 @@ class NavBar extends PureComponent {
                       }
                     >
                       <ListItemIcon className={classes.justifyCenter}>
+                        HELP
                         {element.icon.desktop}
                       </ListItemIcon>
                     </ListItem>
