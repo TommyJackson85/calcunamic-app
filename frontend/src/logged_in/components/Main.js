@@ -41,7 +41,7 @@ class Main extends PureComponent {
     DateTimePicker: null,
     transactions: [],
     statistics: { views: [], profit: [] },
-    posts: [],
+    collections: [],
     targets: [],
     messages: [],
     isAccountActivated: false,
@@ -55,7 +55,7 @@ class Main extends PureComponent {
     this.fetchRandomStatistics();
     this.fetchRandomTransactions();
     this.fetchRandomMessages();
-    this.fetchRandomPosts();
+    this.fetchRandomCollections();
   }
 
   fetchRandomTargets = () => {
@@ -198,9 +198,9 @@ class Main extends PureComponent {
     this.setState({ messages });
   };
 
-  fetchRandomPosts = () => {
+  fetchRandomCollections = () => {
     shuffle(persons);
-    const posts = [];
+    const collections = [];
     const iterations = persons.length;
     const oneDaySeconds = 60 * 60 * 24;
     let curUnix = Math.round(
@@ -208,17 +208,17 @@ class Main extends PureComponent {
     );
     for (let i = 0; i < iterations; i += 1) {
       const person = persons[i];
-      const post = {
+      const collection = {
         id: i,
         src: person.profilePicUrl,
         timestamp: curUnix,
         name: person.name
       };
       curUnix += oneDaySeconds;
-      posts.reverse();
-      posts.push(post);
+      collections.reverse();
+      collections.push(collection);
     }
-    this.setState({ posts });
+    this.setState({ collections });
   };
 
   /**
@@ -261,11 +261,11 @@ class Main extends PureComponent {
     }
   };
 
-  selectPosts = () => {
+  selectCollections = () => {
     smoothScrollTop();
-    document.title = "CalcuNamic - Posts";
+    document.title = "CalcuNamic - Collections";
     this.setState({
-      selectedTab: "Posts"
+      selectedTab: "Collections"
     });
     if (!this.hasFetchedEmojiTextArea) {
       this.hasFetchedEmojiTextArea = true;
@@ -312,7 +312,7 @@ class Main extends PureComponent {
       DateTimePicker,
       transactions,
       statistics,
-      posts,
+      collections,
       targets,
       isAccountActivated,
       messages,
@@ -348,10 +348,10 @@ class Main extends PureComponent {
             pushMessageToSnackbar={this.pushMessageToSnackbar}
             transactions={transactions}
             statistics={statistics}
-            posts={posts}
+            collections={collections}
             targets={targets}
             selectDashboard={this.selectDashboard}
-            selectPosts={this.selectPosts}
+            selectCollections={this.selectCollections}
             selectSubscription={this.selectSubscription}
             openAddBalanceDialog={this.openAddBalanceDialog}
           />

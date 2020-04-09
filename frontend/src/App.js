@@ -43,7 +43,7 @@ class App extends Component {
                 <Switch>
                   {!this.state.token && <Redirect from="/c" to="/" exact />}
                   {!this.state.token && <Redirect from="/c/dashboard" to="/" exact />}
-                  {!this.state.token && <Redirect from="/c/posts" to="/" exact />}
+                  {!this.state.token && <Redirect from="/c/collections" to="/" exact />}
                   {!this.state.token && <Redirect from="/c/subscription" to="/" exact />}
                   {this.state.token && <Redirect from="/" to="/c" exact />}
                   {!this.state.token && (

@@ -3,11 +3,11 @@ import PropTypes from "prop-types";
 import { Button, Box } from "@material-ui/core";
 import ActionPaper from "../../../shared/components/ActionPaper";
 import ButtonCircularProgress from "../../../shared/components/ButtonCircularProgress";
-import AddPostOptions from "./AddPostOptions";
+import AddCollectionOptions from "./AddCollectionOptions";
 
 const now = new Date();
 
-class AddPost extends PureComponent {
+class AddCollection extends PureComponent {
   state = {
     files: [],
     cropFunction: null,
@@ -67,7 +67,7 @@ class AddPost extends PureComponent {
     this.setState({ loading: true });
     setTimeout(() => {
       pushMessageToSnackbar({
-        text: "Your post has been uploaded"
+        text: "Your collection has been uploaded"
       });
       onClose();
     }, 1500);
@@ -88,7 +88,7 @@ class AddPost extends PureComponent {
           helpPadding
           maxWidth="md"
           content={
-            <AddPostOptions
+            <AddCollectionOptions
               EmojiTextArea={EmojiTextArea}
               Dropzone={Dropzone}
               files={files}
@@ -126,7 +126,7 @@ class AddPost extends PureComponent {
   }
 }
 
-AddPost.propTypes = {
+AddCollection.propTypes = {
   pushMessageToSnackbar: PropTypes.func,
   onClose: PropTypes.func,
   Dropzone: PropTypes.elementType,
@@ -135,4 +135,4 @@ AddPost.propTypes = {
   ImageCropper: PropTypes.elementType
 };
 
-export default AddPost;
+export default AddCollection;

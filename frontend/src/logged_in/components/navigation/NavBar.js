@@ -184,8 +184,8 @@ class NavBar extends PureComponent {
         }
       },
       {
-        link: "/c/posts",
-        name: "Posts",
+        link: "/c/collections",
+        name: "Collections",
         onClick: () => {
           this.closeMobileDrawer();
         },
@@ -193,7 +193,7 @@ class NavBar extends PureComponent {
           desktop: (
             <ImageIcon
               className={
-                selectedTab === "Posts" ? classes.textPrimary : "text-white"
+                selectedTab === "Collections" ? classes.textPrimary : "text-white"
               }
               fontSize="small"
             />

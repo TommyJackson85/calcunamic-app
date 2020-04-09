@@ -76,7 +76,7 @@ const styles = theme => ({
 
 const inputOptions = ["None", "Slow", "Normal", "Fast"];
 
-class AddPostOptions extends PureComponent {
+class AddCollectionOptions extends PureComponent {
   state = {
     option1: "None",
     option2: "None",
@@ -238,7 +238,7 @@ class AddPostOptions extends PureComponent {
   }
 }
 
-AddPostOptions.propTypes = {
+AddCollectionOptions.propTypes = {
   onEmojiTextareaChange: PropTypes.func,
   DateTimePicker: PropTypes.elementType,
   EmojiTextArea: PropTypes.elementType,
@@ -257,4 +257,4 @@ AddPostOptions.propTypes = {
   onChangeUploadAt: PropTypes.func
 };
 
-export default withStyles(styles, { withTheme: true })(AddPostOptions);
+export default withStyles(styles, { withTheme: true })(AddCollectionOptions);

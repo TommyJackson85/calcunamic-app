@@ -24,39 +24,39 @@ const styles = {
   }
 };
 
-class PostContent extends PureComponent {
+class CollectionContent extends PureComponent {
   state = {
     page: 0,
-    deletePostDialogOpen: false,
-    deletePostLoading: false
+    deleteCollectionDialogOpen: false,
+    deleteCollectionLoading: false
   };
 
   rowsPerPage = 25;
 
-  closeDeletePostDialog = () => {
+  closeDeleteCollectionDialog = () => {
     this.setState({
-      deletePostDialogOpen: false,
-      deletePostLoading: false
+      deleteCollectionDialogOpen: false,
+      deleteCollectionLoading: false
     });
   };
 
-  deletePost = () => {
+  deleteCollection = () => {
     const { pushMessageToSnackbar } = this.props;
-    this.setState({ deletePostLoading: true });
+    this.setState({ deleteCollectionLoading: true });
     setTimeout(() => {
       this.setState({
-        deletePostLoading: false,
-        deletePostDialogOpen: false
+        deleteCollectionLoading: false,
+        deleteCollectionDialogOpen: false
       });
       pushMessageToSnackbar({
-        text: "Your scheduled post has been deleted"
+        text: "Your scheduled collection has been deleted"
       });
     }, 1500);
   };
 
   onDelete = () => {
     this.setState({
-      deletePostDialogOpen: true
+      deleteCollectionDialogOpen: true
     });
   };
 
@@ -71,13 +71,13 @@ class PostContent extends PureComponent {
       onClick: this.onDelete,
       icon: <DeleteIcon />
     });
-    const { posts } = this.props;
+    const { collections } = this.props;
     const { page } = this.state;
-    if (posts.length > 0) {
+    if (collections.length > 0) {
       return (
         <Box p={1}>
           <Grid container spacing={1}>
-            {posts
+            {collections
               .slice(
                 page * this.rowsPerPage,
                 page * this.rowsPerPage + this.rowsPerPage
@@ -99,34 +99,34 @@ class PostContent extends PureComponent {
     return (
       <Box m={2}>
         <HighlightedInformation>
-          No posts added yet. Click on &quot;NEW&quot; to create your first one.
+          No collections added yet. Click on &quot;NEW&quot; to create your first one.
         </HighlightedInformation>
       </Box>
     );
   };
 
   render() {
-    const { page, deletePostDialogOpen, deletePostLoading } = this.state;
-    const { openAddPostModal, posts, classes } = this.props;
+    const { page, deleteCollectionDialogOpen, deleteCollectionLoading } = this.state;
+    const { openAddCollectionModal, collections, classes } = this.props;
 
     return (
       <Paper>
         <Toolbar className={classes.toolbar}>
-          <Typography variant="h6">Your Posts</Typography>
+          <Typography variant="h6">Your Collections</Typography>
           <Button
             variant="contained"
             color="secondary"
-            onClick={openAddPostModal}
+            onClick={openAddCollectionModal}
             disableElevation
           >
-            Add Post
+            Add Collection
           </Button>
         </Toolbar>
         <Divider />
         {this.printImageGrid()}
         <TablePagination
           component="div"
-          count={posts.length}
+          count={collections.length}
           rowsPerPage={this.rowsPerPage}
           page={page}
           backIconButtonProps={{
@@ -139,29 +139,29 @@ class PostContent extends PureComponent {
           classes={{
             select: classes.dNone,
             selectIcon: classes.dNone,
-            actions: posts.length > 0 ? classes.dBlock : classes.dNone,
-            caption: posts.length > 0 ? classes.dBlock : classes.dNone
+            actions: collections.length > 0 ? classes.dBlock : classes.dNone,
+            caption: collections.length > 0 ? classes.dBlock : classes.dNone
           }}
           labelRowsPerPage=""
         />
         <ConfirmationDialog
-          open={deletePostDialogOpen}
+          open={deleteCollectionDialogOpen}
           title="Confirmation"
-          content="Do you really want to delete the post?"
-          onClose={this.closeDeletePostDialog}
-          loading={deletePostLoading}
-          onConfirm={this.deletePost}
+          content="Do you really want to delete the collection?"
+          onClose={this.closeDeleteCollectionDialog}
+          loading={deleteCollectionLoading}
+          onConfirm={this.deleteCollection}
         />
       </Paper>
     );
   }
 }
 
-PostContent.propTypes = {
-  openAddPostModal: PropTypes.func.isRequired,
+CollectionContent.propTypes = {
+  openAddCollectionModal: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
-  posts: PropTypes.arrayOf(PropTypes.object).isRequired,
+  collections: PropTypes.arrayOf(PropTypes.object).isRequired,
   pushMessageToSnackbar: PropTypes.func
 };
 
-export default withStyles(styles)(PostContent);
+export default withStyles(styles)(CollectionContent);

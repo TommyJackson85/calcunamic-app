@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Switch } from "react-router-dom";
 import { withStyles } from "@material-ui/core";
 import Dashboard from "./dashboard/Dashboard";
-import Posts from "./posts/Posts";
+import Collections from "./collections/Collections";
 import Subscription from "./subscription/Subscription";
 import PropsRoute from "../../shared/components/PropsRoute";
 
@@ -50,7 +50,7 @@ function Routing(props) {
     Dropzone,
     DateTimePicker,
     pushMessageToSnackbar,
-    posts,
+    collections,
     transactions,
     handleNumberChange,
     handleSwitchToggle,
@@ -61,7 +61,7 @@ function Routing(props) {
     targets,
     isAccountActivated,
     selectDashboard,
-    selectPosts,
+    selectCollections,
     selectSubscription,
     openAddBalanceDialog
   } = props;
@@ -69,15 +69,15 @@ function Routing(props) {
     <div className={classes.wrapper}>
       <Switch>
         <PropsRoute
-          path="/c/posts"
-          component={Posts}
+          path="/c/collections"
+          component={Collections}
           EmojiTextArea={EmojiTextArea}
           ImageCropper={ImageCropper}
           Dropzone={Dropzone}
           DateTimePicker={DateTimePicker}
           pushMessageToSnackbar={pushMessageToSnackbar}
-          posts={posts}
-          selectPosts={selectPosts}
+          collections={collections}
+          selectCollections={selectCollections}
         />
         <PropsRoute
           path="/c/subscription"
@@ -113,7 +113,7 @@ Routing.propTypes = {
   Dropzone: PropTypes.elementType,
   DateTimePicker: PropTypes.elementType,
   pushMessageToSnackbar: PropTypes.func,
-  posts: PropTypes.arrayOf(PropTypes.object).isRequired,
+  collections: PropTypes.arrayOf(PropTypes.object).isRequired,
   transactions: PropTypes.arrayOf(PropTypes.object).isRequired,
   handleNumberChange: PropTypes.func,
   handleSwitchToggle: PropTypes.func,
@@ -124,7 +124,7 @@ Routing.propTypes = {
   targets: PropTypes.arrayOf(PropTypes.object).isRequired,
   isAccountActivated: PropTypes.bool.isRequired,
   selectDashboard: PropTypes.func.isRequired,
-  selectPosts: PropTypes.func.isRequired,
+  selectCollections: PropTypes.func.isRequired,
   selectSubscription: PropTypes.func.isRequired,
   openAddBalanceDialog: PropTypes.func.isRequired
 };
