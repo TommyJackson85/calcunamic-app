@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Button, Box } from "@material-ui/core";
 import ActionPaper from "../../../shared/components/ActionPaper";
 import ButtonCircularProgress from "../../../shared/components/ButtonCircularProgress";
-import AddCollectionOptions from "./AddCollectionOptions";
+//import AddCollectionOptions from "./AddCollectionOptions";
 
 const now = new Date();
 
@@ -74,6 +74,7 @@ class AddCollection extends PureComponent {
   };
 
   render() {
+
     const { files, uploadAt, cropperFile, loading } = this.state;
     const {
       Dropzone,
@@ -82,12 +83,13 @@ class AddCollection extends PureComponent {
       ImageCropper,
       onClose
     } = this.props;
-    return (
-      <Fragment>
-        <ActionPaper
-          helpPadding
-          maxWidth="md"
-          content={
+    console.log("files:::");
+    console.log(files);
+    console.log("EmojiTextArea:::");
+    console.log(EmojiTextArea);
+    console.log("DATEtimepicker:::");
+    console.log(DateTimePicker);
+    /* Removed from content in action paper below:
             <AddCollectionOptions
               EmojiTextArea={EmojiTextArea}
               Dropzone={Dropzone}
@@ -102,19 +104,26 @@ class AddCollection extends PureComponent {
               cropperFile={cropperFile}
               onCropperClose={this.onCropperClose}
             />
-          }
+          */
+    return (
+      <Fragment>
+        <ActionPaper
+          helpPadding
+          maxWidth="md"
+          content={<div></div>}
           actions={
             <Fragment>
               <Box mr={1}>
                 <Button onClick={onClose} disabled={loading}>
                   Back
                 </Button>
+                <h1>OR NOT BACK!!</h1>
               </Box>
               <Button
                 onClick={this.handleUpload}
                 variant="contained"
                 color="secondary"
-                disabled={files.length === 0 || loading}
+                disabled={loading}
               >
                 Upload {loading && <ButtonCircularProgress />}
               </Button>

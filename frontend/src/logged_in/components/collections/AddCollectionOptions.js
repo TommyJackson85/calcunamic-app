@@ -2,21 +2,16 @@ import React, { Fragment, PureComponent } from "react";
 import PropTypes from "prop-types";
 import {
   Typography,
-  IconButton,
-  List,
   ListItem,
   ListItemText,
   ListItemSecondaryAction,
-  FormControl,
-  Select,
-  OutlinedInput,
-  MenuItem,
   Box,
+  TextField,
   withStyles
 } from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
-import Bordered from "../../../shared/components/Bordered";
-import ImageCropperDialog from "../../../shared/components/ImageCropperDialog";
+//import CloseIcon from "@material-ui/icons/Close";
+//import Bordered from "../../../shared/components/Bordered";
+//import ImageCropperDialog from "../../../shared/components/ImageCropperDialog";
 
 const styles = theme => ({
   floatButtonWrapper: {
@@ -74,14 +69,14 @@ const styles = theme => ({
   }
 });
 
-const inputOptions = ["None", "Slow", "Normal", "Fast"];
+//const inputOptions = ["None", "Slow", "Normal", "Fast"];
 
 class AddCollectionOptions extends PureComponent {
   state = {
-    option1: "None",
-    option2: "None",
-    option3: "None",
-    option4: "None"
+    option1: "Title",//each was none
+    option2: "Description",
+    option3: "Numbers",
+    option4: "Date"
   };
 
   handleChange = event => {
@@ -89,8 +84,8 @@ class AddCollectionOptions extends PureComponent {
     this.setState({ [name]: value });
   };
 
-  printFile = () => {
-    const { Dropzone, classes, files, deleteItem, onDrop } = this.props;
+  /*printFile = () => {
+    const { classes, files, deleteItem } = this.props;
     if (files[0]) {
       return (
         <div className={classes.imgWrapper}>
@@ -103,34 +98,37 @@ class AddCollectionOptions extends PureComponent {
           <div className={classes.floatButtonWrapper}>
             <IconButton onClick={deleteItem}>
               <CloseIcon />
+              <h1>OPTIONS!!!</h1>
             </IconButton>
           </div>
         </div>
       );
     }
     return (
+      <div>
+        <h1>SURE THING</h1>
+      </div>
+    );
+    /*return (
       <Dropzone accept="image/png, image/jpeg" onDrop={onDrop} fullHeight>
         <span className={classes.uploadText}>
           Click / Drop file <br /> here
         </span>
       </Dropzone>
     );
-  };
-
+    */
+//};
   render() {
     const {
       EmojiTextArea,
-      ImageCropper,
       classes,
       DateTimePicker,
-      cropperFile,
-      onCrop,
-      onCropperClose,
       uploadAt,
       onChangeUploadAt
     } = this.props;
-    const { option1, option2, option3, option4 } = this.state;
-    const inputs = [
+    
+    //const { option1, option2, option3, option4 } = this.state;
+    /*const inputs = [
       {
         state: option1,
         label: "Option 1",
@@ -152,87 +150,48 @@ class AddCollectionOptions extends PureComponent {
         stateName: "option4"
       }
     ];
+    */
     return (
       <Fragment>
-        {ImageCropper && (
-          <ImageCropperDialog
-            open={cropperFile ? true : false}
-            ImageCropper={ImageCropper}
-            src={cropperFile ? cropperFile.preview : ""}
-            onCrop={onCrop}
-            onClose={onCropperClose}
-            aspectRatio={4 / 3}
-          />
-        )}
         <Typography paragraph variant="h6">
-          Upload Image
+          Create New Collection
+        </Typography>
+        <TextField
+          id="outlined-multiline-flexible"
+          label="Name of Collecton"
+          multiline
+          rowsMax={12}
+          value={"ddd"}
+          variant="outlined"
+        />
+        <ListItem divider disableGutters className="listItemLeftPadding">
+          <ListItemText>
+            <Typography variant="body2">DATE Upload at</Typography>
+          </ListItemText>
+            <ListItemSecondaryAction>
+              {DateTimePicker && (
+              <DateTimePicker
+                value={uploadAt}
+                format="yyyy/MM/dd hh:mm a"
+                onChange={onChangeUploadAt}
+                disablePast
+              />
+              )}
+            </ListItemSecondaryAction>
+          </ListItem>
+        <Typography paragraph variant="h6">
+          Description
         </Typography>
         <Box mb={2}>
           {EmojiTextArea && (
             <EmojiTextArea
               inputClassName={classes.emojiTextArea}
               maxCharacters={2200}
-              rightContent={this.printFile()}
+              //rightContent={this.printFile()}
               emojiSet="google"
             />
           )}
         </Box>
-        <Typography paragraph variant="h6">
-          Options
-        </Typography>
-        <List disablePadding>
-          <Bordered disableVerticalPadding disableBorderRadius>
-            <ListItem divider disableGutters className="listItemLeftPadding">
-              <ListItemText>
-                <Typography variant="body2">Upload at</Typography>
-              </ListItemText>
-              <ListItemSecondaryAction>
-                {DateTimePicker && (
-                  <DateTimePicker
-                    value={uploadAt}
-                    format="yyyy/MM/dd hh:mm a"
-                    onChange={onChangeUploadAt}
-                    disablePast
-                  />
-                )}
-              </ListItemSecondaryAction>
-            </ListItem>
-            {inputs.map((element, index) => (
-              <ListItem
-                className="listItemLeftPadding"
-                disableGutters
-                divider={index !== inputs.length - 1}
-                key={index}
-              >
-                <ListItemText>
-                  <Typography variant="body2">{element.label}</Typography>
-                </ListItemText>
-                <FormControl variant="outlined">
-                  <ListItemSecondaryAction>
-                    <Select
-                      value={element.state}
-                      onChange={this.handleChange}
-                      input={
-                        <OutlinedInput
-                          name={element.stateName}
-                          labelWidth={0}
-                          className={classes.numberInput}
-                          classes={{ input: classes.numberInputInput }}
-                        />
-                      }
-                    >
-                      {inputOptions.map(innerElement => (
-                        <MenuItem value={innerElement} key={innerElement}>
-                          {innerElement}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </ListItemSecondaryAction>
-                </FormControl>
-              </ListItem>
-            ))}
-          </Bordered>
-        </List>
       </Fragment>
     );
   }

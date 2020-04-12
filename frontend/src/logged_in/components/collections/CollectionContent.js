@@ -1,19 +1,17 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import {
-  Grid,
   TablePagination,
   Divider,
   Toolbar,
   Typography,
   Button,
   Paper,
-  Box,
   withStyles
 } from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
-import SelfAligningImage from "../../../shared/components/SelfAligningImage";
-import HighlightedInformation from "../../../shared/components/HighlightedInformation";
+//import DeleteIcon from "@material-ui/icons/Delete";
+//import SelfAligningImage from "../../../shared/components/SelfAligningImage";
+//import HighlightedInformation from "../../../shared/components/HighlightedInformation";
 import ConfirmationDialog from "../../../shared/components/ConfirmationDialog";
 
 const styles = {
@@ -64,7 +62,7 @@ class CollectionContent extends PureComponent {
     this.setState({ page });
   };
 
-  printImageGrid = () => {
+  /*printImageGrid = () => {
     const options = [];
     options.push({
       name: "Delete",
@@ -103,7 +101,7 @@ class CollectionContent extends PureComponent {
         </HighlightedInformation>
       </Box>
     );
-  };
+  };*/
 
   render() {
     const { page, deleteCollectionDialogOpen, deleteCollectionLoading } = this.state;
@@ -122,6 +120,7 @@ class CollectionContent extends PureComponent {
             Add Collection
           </Button>
         </Toolbar>
+        <h1>Fantastic TOOLBAR!</h1>
         <Divider />
         {this.printImageGrid()}
         <TablePagination
