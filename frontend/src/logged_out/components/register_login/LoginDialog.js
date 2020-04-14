@@ -62,21 +62,6 @@ class LoginDialog extends PureComponent {
       loading: true
     });
     setStatus(null);
-    /*if (email !== "test@web.com") {
-      setTimeout(() => {
-        setStatus("invalidEmail");
-        this.setState({
-          loading: false
-        });
-      }, 1500);
-    } else if (password !== "test") {
-      setTimeout(() => {
-        setStatus("invalidPassword");
-        this.setState({
-          loading: false
-        });
-      }, 1500);
-    } else {*/
       fetch('http://localhost:8000/graphql', {
         method: 'POST',
         body: JSON.stringify(requestBody),

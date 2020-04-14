@@ -7,12 +7,20 @@ import {
   Typography,
   Button,
   Paper,
-  withStyles
+  withStyles,
+  Avatar,
+  IconButton,
+  List,
+  ListItem, ListItemAvatar, ListItemText, ListItemSecondaryAction
 } from "@material-ui/core";
+import FolderIcon from '@material-ui/icons/Folder';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 //import DeleteIcon from "@material-ui/icons/Delete";
 //import SelfAligningImage from "../../../shared/components/SelfAligningImage";
 //import HighlightedInformation from "../../../shared/components/HighlightedInformation";
 import ConfirmationDialog from "../../../shared/components/ConfirmationDialog";
+import AuthContext from '../../../context/auth-context';
 
 const styles = {
   dBlock: { display: "block" },
@@ -21,16 +29,73 @@ const styles = {
     justifyContent: "space-between"
   }
 };
+ 
+function generate(element) {
+  return [0, 1, 2].map((value) =>
+    React.cloneElement(element, {
+      key: value,
+    }),
+  );
+};
 
 class CollectionContent extends PureComponent {
   state = {
+    collections: [],
     page: 0,
     deleteCollectionDialogOpen: false,
-    deleteCollectionLoading: false
+    deleteCollectionLoading: false,
+    dense: true,
+    secondary: true
   };
-
+  static contextType = AuthContext;
   rowsPerPage = 25;
 
+  fetchCollections = () => {
+    const queryCollections = {
+      query: `
+        query {
+          collections {
+            _id
+            title
+            description
+            numbers
+            date
+            creator {
+              _id
+              email
+            }
+          }
+        }
+      `
+    };
+    fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      body: JSON.stringify(queryCollections),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.context.token}`
+      }
+    })
+    .then(res => {
+        if (res.status !== 200 && res.status !== 201) {
+          console.log("NEW ERROR!!");
+          console.log(res);
+          throw new Error('Failed!');
+        }
+        return res.json();
+    })
+    .then(resData => {
+      console.log(resData);
+      const collections = resData.data.collections;
+      this.setState({collections: collections});
+    })
+    .catch(err => {
+      console.log(err);
+    });
+  }
+  componentDidMount() {
+    this.fetchCollections();
+  }
   closeDeleteCollectionDialog = () => {
     this.setState({
       deleteCollectionDialogOpen: false,
@@ -106,7 +171,27 @@ class CollectionContent extends PureComponent {
   render() {
     const { page, deleteCollectionDialogOpen, deleteCollectionLoading } = this.state;
     const { openAddCollectionModal, collections, classes } = this.props;
-
+    //{this.printImageGrid()} this was removed from above <TablePagination>
+    const collectionsList = this.state.collections.map(collection => {
+      return (
+        <ListItem key={collection._id}>
+          <ListItemAvatar>
+            <Avatar>
+              <FolderIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary={collection.title}
+            secondary={collection.description}
+          />
+          <ListItemSecondaryAction>
+            <IconButton edge="end" aria-label="delete">
+              <DeleteIcon />
+            </IconButton>
+          </ListItemSecondaryAction>
+        </ListItem>
+      )
+    });
     return (
       <Paper>
         <Toolbar className={classes.toolbar}>
@@ -120,9 +205,33 @@ class CollectionContent extends PureComponent {
             Add Collection
           </Button>
         </Toolbar>
-        <h1>Fantastic TOOLBAR!</h1>
         <Divider />
-        {this.printImageGrid()}
+        <Typography variant="h6" className={classes.title}>
+            Avatar with text and icon
+          </Typography>
+          <div className={classes.demo}>
+            <List dense={this.state.dense}>
+              {collectionsList}
+              {generate(
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <FolderIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary="Single-line item"
+                    secondary={this.state.secondary ? 'Secondary text' : null}
+                  />
+                  <ListItemSecondaryAction>
+                    <IconButton edge="end" aria-label="delete">
+                      <DeleteIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>,
+              )}
+            </List>
+          </div>
         <TablePagination
           component="div"
           count={collections.length}

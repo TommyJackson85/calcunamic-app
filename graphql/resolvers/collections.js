@@ -1,5 +1,6 @@
 const Collection = require('../../models/collection');
 const { transformCollection } = require('./merge');
+const { dateToString } = require('../../helpers/date');
 const User = require('../../models/user');
 
 module.exports = {

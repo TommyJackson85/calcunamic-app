@@ -1,44 +1,24 @@
 import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
-import { Button, Box } from "@material-ui/core";
+import { Button, Box, TextField } from "@material-ui/core";
 import ActionPaper from "../../../shared/components/ActionPaper";
 import ButtonCircularProgress from "../../../shared/components/ButtonCircularProgress";
-//import AddCollectionOptions from "./AddCollectionOptions";
+import AuthContext from '../../../context/auth-context';
 
 const now = new Date();
 
 class AddCollection extends PureComponent {
   state = {
-    files: [],
-    cropFunction: null,
     uploadAt: now,
     loading: false,
-    cropperFile: null
   };
+  static contextType = AuthContext;
 
-  acceptDrop = file => {
-    this.setState({ files: [file] });
-  };
-
-  onDrop = (acceptedFiles, rejectedFiles) => {
-    const { pushMessageToSnackbar } = this.props;
-    if (acceptedFiles.length + rejectedFiles.length > 1) {
-      pushMessageToSnackbar({
-        isErrorMessage: true,
-        text: "You cannot upload more than one file at once"
-      });
-    } else if (acceptedFiles.length === 0) {
-      pushMessageToSnackbar({
-        isErrorMessage: true,
-        text: "The file you wanted to upload isn't an image"
-      });
-    } else if (acceptedFiles.length === 1) {
-      const file = acceptedFiles[0];
-      file.preview = URL.createObjectURL(file);
-      file.key = new Date().getTime();
-      this.setState({ cropperFile: file });
-    }
-  };
+  constructor(props) { 
+    super(props);
+    this.titleElRef = React.createRef();
+    this.descriptionElRef = React.createRef();
+  } 
 
   onChangeUploadAt = uploadAt => {
     this.setState({
@@ -46,87 +26,130 @@ class AddCollection extends PureComponent {
     });
   };
 
-  onCropperClose = () => {
-    this.setState({ cropperFile: null });
-  };
+  showCollections = () => {
 
-  deleteItem = () => {
-    this.setState({ files: [] });
-  };
-
-  onCrop = dataUrl => {
-    const { cropperFile } = this.state;
-    const file = cropperFile;
-    file.preview = dataUrl;
-    this.acceptDrop(file);
-    this.setState({ cropperFile: null });
-  };
+  }
 
   handleUpload = () => {
     const { pushMessageToSnackbar, onClose } = this.props;
     this.setState({ loading: true });
+    console.log(this.titleElRef.current);
+    console.log(this.descriptionElRef.current);
+    const title = this.titleElRef.value;
+    const description = this.descriptionElRef.value;
+    const date = new Date().toISOString();
+    const numbers = 5.55;
+    if (title.trim().length === 0 || description.trim().length === 0){
+        return;
+    }
+    const collection = {title, description, numbers, date}
+    console.log(collection);
+    const createCollection = {
+      query: `
+        mutation {
+          createCollection(collectionInput: {title: "${title}", description: "${description}", numbers: ${numbers} date: "${date}"}) {
+            _id
+            title
+            description
+            numbers
+            date
+            creator {
+              _id
+              email
+            }
+          }
+        }
+      `
+    };
+
+    console.log(this.context.token);
+    fetch('http://localhost:8000/graphql', {
+        method: 'POST',
+        body: JSON.stringify(createCollection),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.context.token}`
+        }
+    })
+      .then(res => {
+          if (res.status !== 200 && res.status !== 201) {
+            console.log("NEW ERROR!!");
+            console.log(res);
+            throw new Error('Failed!');
+          }
+          return res.json();
+      })
+      .then(resData => {
+        console.log(resData);
+        //call fetchCollection
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
     setTimeout(() => {
       pushMessageToSnackbar({
         text: "Your collection has been uploaded"
       });
       onClose();
-    }, 1500);
-  };
+      }, 1500);
+    };
 
   render() {
-
-    const { files, uploadAt, cropperFile, loading } = this.state;
+    const { loading } = this.state;
     const {
-      Dropzone,
-      EmojiTextArea,
-      DateTimePicker,
-      ImageCropper,
       onClose
     } = this.props;
-    console.log("files:::");
-    console.log(files);
-    console.log("EmojiTextArea:::");
-    console.log(EmojiTextArea);
-    console.log("DATEtimepicker:::");
-    console.log(DateTimePicker);
-    /* Removed from content in action paper below:
-            <AddCollectionOptions
-              EmojiTextArea={EmojiTextArea}
-              Dropzone={Dropzone}
-              files={files}
-              onDrop={this.onDrop}
-              deleteItem={this.deleteItem}
-              DateTimePicker={DateTimePicker}
-              uploadAt={uploadAt}
-              onChangeUploadAt={this.onChangeUploadAt}
-              onCrop={this.onCrop}
-              ImageCropper={ImageCropper}
-              cropperFile={cropperFile}
-              onCropperClose={this.onCropperClose}
-            />
-          */
+
     return (
       <Fragment>
         <ActionPaper
           helpPadding
           maxWidth="md"
-          content={<div></div>}
+          content={
+            <div>
+              <TextField
+                label="Title"
+                id="outlined-margin-none"
+                inputRef={node => {
+                  this.titleElRef = node;
+                }}
+                defaultValue="Collection Name"
+                fullWidth
+                helperText="Some important text"
+                variant="outlined"
+              />
+              <TextField
+                id="outlined-multiline-static"
+                inputRef={node => {
+                  this.descriptionElRef = node;
+                }}
+                label="Description"
+                multiline
+                fullWidth
+                rows={4}
+                defaultValue="Default Value"
+                variant="outlined"
+              />
+            </div>
+          }
           actions={
             <Fragment>
               <Box mr={1}>
                 <Button onClick={onClose} disabled={loading}>
                   Back
                 </Button>
-                <h1>OR NOT BACK!!</h1>
               </Box>
-              <Button
-                onClick={this.handleUpload}
-                variant="contained"
-                color="secondary"
-                disabled={loading}
-              >
-                Upload {loading && <ButtonCircularProgress />}
-              </Button>
+              {this.context.token && (
+                <Button
+                    onClick={this.handleUpload}
+                    variant="contained"
+                    color="secondary"
+                    disabled={loading}
+                  >
+                    Upload {loading && <ButtonCircularProgress />}
+                </Button>
+              )}
             </Fragment>
           }
         />
