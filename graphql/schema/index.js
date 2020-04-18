@@ -30,7 +30,6 @@ module.exports = buildSchema(`
         token: String!
         tokenExpiration: Int!
     }
-
     input NumberInput {
         value: Float!
         link: String!
@@ -45,11 +44,12 @@ module.exports = buildSchema(`
         date: String!
     }
     input UserInput {
-        email: String!
         password: String!
+        email: String!
     }
     type RootQuery {
-        collections: [Collection!]!
+        collections(collectionsList: [ID!]!): [Collection!]!
+        usersCollections(userId: ID!): [Collection!]!
         numbers: [Number!]!
         login(email: String!, password: String!): AuthData!
     }

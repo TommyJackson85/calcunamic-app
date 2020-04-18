@@ -30,17 +30,16 @@ const styles = {
   }
 };
  
-function generate(element) {
+/*function generate(element) {
   return [0, 1, 2].map((value) =>
     React.cloneElement(element, {
       key: value,
     }),
   );
-};
+};*/
 
 class CollectionContent extends PureComponent {
   state = {
-    collections: [],
     page: 0,
     deleteCollectionDialogOpen: false,
     deleteCollectionLoading: false,
@@ -50,51 +49,8 @@ class CollectionContent extends PureComponent {
   static contextType = AuthContext;
   rowsPerPage = 25;
 
-  fetchCollections = () => {
-    const queryCollections = {
-      query: `
-        query {
-          collections {
-            _id
-            title
-            description
-            numbers
-            date
-            creator {
-              _id
-              email
-            }
-          }
-        }
-      `
-    };
-    fetch('http://localhost:8000/graphql', {
-      method: 'POST',
-      body: JSON.stringify(queryCollections),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.context.token}`
-      }
-    })
-    .then(res => {
-        if (res.status !== 200 && res.status !== 201) {
-          console.log("NEW ERROR!!");
-          console.log(res);
-          throw new Error('Failed!');
-        }
-        return res.json();
-    })
-    .then(resData => {
-      console.log(resData);
-      const collections = resData.data.collections;
-      this.setState({collections: collections});
-    })
-    .catch(err => {
-      console.log(err);
-    });
-  }
   componentDidMount() {
-    this.fetchCollections();
+    console.log("its working");
   }
   closeDeleteCollectionDialog = () => {
     this.setState({
@@ -127,52 +83,14 @@ class CollectionContent extends PureComponent {
     this.setState({ page });
   };
 
-  /*printImageGrid = () => {
-    const options = [];
-    options.push({
-      name: "Delete",
-      onClick: this.onDelete,
-      icon: <DeleteIcon />
-    });
-    const { collections } = this.props;
-    const { page } = this.state;
-    if (collections.length > 0) {
-      return (
-        <Box p={1}>
-          <Grid container spacing={1}>
-            {collections
-              .slice(
-                page * this.rowsPerPage,
-                page * this.rowsPerPage + this.rowsPerPage
-              )
-              .map(element => (
-                <Grid item xs={6} sm={4} md={3} key={element.id}>
-                  <SelfAligningImage
-                    src={element.src}
-                    title={element.name}
-                    timeStamp={element.timestamp}
-                    options={options}
-                  />
-                </Grid>
-              ))}
-          </Grid>
-        </Box>
-      );
-    }
-    return (
-      <Box m={2}>
-        <HighlightedInformation>
-          No collections added yet. Click on &quot;NEW&quot; to create your first one.
-        </HighlightedInformation>
-      </Box>
-    );
-  };*/
-
   render() {
     const { page, deleteCollectionDialogOpen, deleteCollectionLoading } = this.state;
     const { openAddCollectionModal, collections, classes } = this.props;
     //{this.printImageGrid()} this was removed from above <TablePagination>
-    const collectionsList = this.state.collections.map(collection => {
+    console.log(this.props.collections);
+    const collectionsList = this.props.collections.map(collection => {
+      console.log("checking collections");
+      console.log(collection);
       return (
         <ListItem key={collection._id}>
           <ListItemAvatar>
@@ -211,25 +129,7 @@ class CollectionContent extends PureComponent {
           </Typography>
           <div className={classes.demo}>
             <List dense={this.state.dense}>
-              {collectionsList}
-              {generate(
-                <ListItem>
-                  <ListItemAvatar>
-                    <Avatar>
-                      <FolderIcon />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary="Single-line item"
-                    secondary={this.state.secondary ? 'Secondary text' : null}
-                  />
-                  <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="delete">
-                      <DeleteIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>,
-              )}
+              {collectionsList || <p>nothing found</p>}
             </List>
           </div>
         <TablePagination

@@ -61,7 +61,7 @@ class AddCollection extends PureComponent {
         }
       `
     };
-
+    let updatedCollections; //updated from fetch to show updated collections without having to reload collections.
     console.log(this.context.token);
     fetch('http://localhost:8000/graphql', {
         method: 'POST',
@@ -81,7 +81,25 @@ class AddCollection extends PureComponent {
       })
       .then(resData => {
         console.log(resData);
-        //call fetchCollection
+        console.log("this.state.collections");
+        console.log(this.props.collections);
+        //folling setState call should add the object so it doesn't need to reload collections.
+         
+          updatedCollections = [...this.props.collections];
+          updatedCollections.push({
+            _id: resData.data.createCollection._id,
+            title: resData.data.createCollection.title,
+            description: resData.data.createCollection.description,
+            numbers: resData.data.createCollection.numbers,
+            date: resData.data.createCollection.date,
+            creator: {
+              _id: this.context.userId
+            }
+          });
+          console.log("updatedCollections");
+          console.log(updatedCollections);
+          this.props.updateCollections(updatedCollections);
+          
       })
       .catch(err => {
         console.log(err);
@@ -98,7 +116,8 @@ class AddCollection extends PureComponent {
   render() {
     const { loading } = this.state;
     const {
-      onClose
+      onClose,
+      updatedCollections,
     } = this.props;
 
     return (
