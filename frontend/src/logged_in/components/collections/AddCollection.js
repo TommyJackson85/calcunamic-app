@@ -26,9 +26,6 @@ class AddCollection extends PureComponent {
     });
   };
 
-  showCollections = () => {
-
-  }
 
   handleUpload = () => {
     const { pushMessageToSnackbar, onClose } = this.props;
@@ -117,7 +114,6 @@ class AddCollection extends PureComponent {
     const { loading } = this.state;
     const {
       onClose,
-      updatedCollections,
     } = this.props;
 
     return (

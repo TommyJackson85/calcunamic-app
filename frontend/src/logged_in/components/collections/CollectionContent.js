@@ -15,6 +15,12 @@ import {
 } from "@material-ui/core";
 import FolderIcon from '@material-ui/icons/Folder';
 import DeleteIcon from '@material-ui/icons/Delete';
+import ArrowDropDownOutlinedIcon from '@material-ui/icons/ArrowDropDownOutlined';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
 
 //import DeleteIcon from "@material-ui/icons/Delete";
 //import SelfAligningImage from "../../../shared/components/SelfAligningImage";
@@ -46,6 +52,7 @@ class CollectionContent extends PureComponent {
     dense: true,
     secondary: true
   };
+
   static contextType = AuthContext;
   rowsPerPage = 25;
 
@@ -82,32 +89,41 @@ class CollectionContent extends PureComponent {
   handleChangePage = (__, page) => {
     this.setState({ page });
   };
+  handleChange = () => {
 
+  }
   render() {
     const { page, deleteCollectionDialogOpen, deleteCollectionLoading } = this.state;
     const { openAddCollectionModal, collections, classes } = this.props;
     //{this.printImageGrid()} this was removed from above <TablePagination>
     console.log(this.props.collections);
-    const collectionsList = this.props.collections.map(collection => {
+    const collectionsList = this.props.collections.map((collection, index) => {
       console.log("checking collections");
-      console.log(collection);
+      console.log(index);
       return (
-        <ListItem key={collection._id}>
-          <ListItemAvatar>
-            <Avatar>
-              <FolderIcon />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary={collection.title}
-            secondary={collection.description}
-          />
-          <ListItemSecondaryAction>
-            <IconButton edge="end" aria-label="delete">
-              <DeleteIcon />
-            </IconButton>
-          </ListItemSecondaryAction>
-        </ListItem>
+        <div key={index}>
+          <ExpansionPanel>
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography className={classes.heading}>
+                <Avatar>
+                  <FolderIcon />
+                </Avatar>
+                {collection.title} ~ {new Date(collection.date).toLocaleTimeString('de-DE')}
+              </Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Typography>
+                <p>{collection.description}</p>
+                <p>Numbers: {collection.numbers}</p>
+              </Typography>
+              <br />
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+        </div>
       )
     });
     return (
@@ -126,12 +142,14 @@ class CollectionContent extends PureComponent {
         <Divider />
         <Typography variant="h6" className={classes.title}>
             Avatar with text and icon
-          </Typography>
-          <div className={classes.demo}>
-            <List dense={this.state.dense}>
-              {collectionsList || <p>nothing found</p>}
-            </List>
+        </Typography>
+        <div className={classes.demo}>
+          { (collectionsList.length > 0) ? collectionsList : ( 
+          <div key={0}>
+            <p>No collections found. <em onClick={openAddCollectionModal}>Click hear</em> to start your first data collection!</p>
           </div>
+          ) }
+        </div>
         <TablePagination
           component="div"
           count={collections.length}
