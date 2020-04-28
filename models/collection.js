@@ -11,10 +11,6 @@ const collectionSchema = new Schema({
         type: String,
         required: true
     },
-    numbers: {
-        type: Number,
-        required: true
-    },
     date: {
         type: Date,
         required: true
@@ -22,7 +18,13 @@ const collectionSchema = new Schema({
     creator: {
         type: Schema.Types.ObjectId,
         ref: 'User'
-    }
+    },
+    numbers: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Number'
+        }
+    ],
 });
 
 module.exports = mongoose.model('Collection', collectionSchema);

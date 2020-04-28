@@ -6,7 +6,7 @@ module.exports = buildSchema(`
         link: String!
         description: String!
         dataType: String!
-        collectionIn: Collection!
+        collectionsIn: [Collection!]!
         creator: User!
         createdAt: String!
         updatedAt: String!
@@ -15,7 +15,7 @@ module.exports = buildSchema(`
         _id: ID!
         title: String!
         description: String!
-        numbers: Float!
+        numbers: [Number!]!
         date: String!
         creator: User!
     }
@@ -35,17 +35,19 @@ module.exports = buildSchema(`
         link: String!
         description: String!
         dataType: String!
-        collectionID: ID!
     }
     input CollectionInput {
         title: String!
         description: String!
-        numbers: Float!
         date: String!
     }
     input UserInput {
         password: String!
         email: String!
+    }
+    input CollectionNumbersInput {
+        collectionInput: CollectionInput!
+        numberInputs: [NumberInput!]!
     }
     type RootQuery {
         collections(collectionsList: [ID!]!): [Collection!]!
@@ -55,6 +57,7 @@ module.exports = buildSchema(`
     }
     type RootMutation {
         createNumber(numberInput: NumberInput): Number
+        createCollectionWithNumbers(collectionNumbersInput: CollectionNumbersInput): Collection
         deleteNumber(numberId: ID!): Collection
         createCollection(collectionInput: CollectionInput): Collection
         createUser(userInput: UserInput): User

@@ -18,13 +18,41 @@ class Collections extends PureComponent {
           usersCollections(userId:"${this.context.userId}"){
             title
             description
-            numbers
             date
+            numbers {
+              _id
+              value
+              link
+              description
+              dataType
+              collectionsIn { _id }
+              creator { _id }
+              createdAt
+              updatedAt
+            }
           }
         }
       `
     };
-    console.log(queryCollections);
+    /*
+    query {
+  usersCollections(userId: "5e9eece50348e61712b65b2b"){
+		title
+    date
+    description
+    creator { _id }
+    numbers { 
+      _id
+      link
+      collectionsIn {
+        title
+        description
+      }
+    }
+  }
+}
+    */
+    console.log(queryCollections.query);
     console.log(this.context);
     fetch('http://localhost:8000/graphql', {
         method: 'POST',

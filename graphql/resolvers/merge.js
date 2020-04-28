@@ -1,5 +1,6 @@
 const Collection = require('../../models/collection');
 const User = require('../../models/user');
+const Number = require('../../models/number');
 const { dateToString } = require('../../helpers/date');
 
 
@@ -26,6 +27,16 @@ const collections = async collectionIds => {
       throw err;
     }
 };
+const numbers = async numberIds => {
+  try {
+    const numbers = await Number.find({ _id: { $in: numberIds } });
+    return numbers.map(number => {
+      return transformNumber(number);
+    });
+  } catch (err) {
+    throw err;
+  }
+};
 
 const singleCollection = async collectionID => {
     try{
@@ -36,10 +47,20 @@ const singleCollection = async collectionID => {
     }
 };
 
+const singleNumber = async numberID => {
+  try{
+    const number = await Number.findById(numberID);
+    return transformNumber(number);
+  } catch (err) {
+    throw err;
+  }
+};
+
 const transformCollection = collection => {
     return {
       ...collection._doc,
       _id: collection.id,
+      numbers: numbers.bind(this, collection._doc.numbers),
       date: dateToString(collection._doc.date),
       creator: user.bind(this, collection.creator)
     };
@@ -50,7 +71,7 @@ const transformNumber = number => {
     return { 
       ...number._doc, 
       _id: number.id,
-      collectionIn: singleCollection.bind(this, number._doc.collectionIn),
+      collectionsIn: collections.bind(this, number._doc.collectionsIn),
       creator: user.bind(this, number._doc.creator),
       createdAt: dateToString(number._doc.createdAt),
       updatedAt: dateToString(number._doc.updatedAt)

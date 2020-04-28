@@ -23,10 +23,12 @@ const numberSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: 'User'
         },
-        collectionIn: { 
-            type: Schema.Types.ObjectId,
-            ref: 'Collection'
-        }
+        collectionsIn: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Collection'
+            }
+        ],
     },
     { timestamps: true }
 )

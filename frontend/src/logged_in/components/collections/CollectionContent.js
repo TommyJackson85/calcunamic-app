@@ -97,6 +97,19 @@ class CollectionContent extends PureComponent {
     const { openAddCollectionModal, collections, classes } = this.props;
     //{this.printImageGrid()} this was removed from above <TablePagination>
     console.log(this.props.collections);
+
+    const numbersList = (numbers) => {
+      return numbers.map((number, i) => {
+        return (
+          <Typography key={i}>
+            <p>{number.value} ~ {number.dataType} ~ Found at: <a href={number.link}></a></p>
+            <hr/>
+            <p>Created At: {number.createdAt} | Updated At: {number.updatedAt}</p>
+          </Typography>
+        )
+      })
+    }
+
     const collectionsList = this.props.collections.map((collection, index) => {
       console.log("checking collections");
       console.log(index);
@@ -118,8 +131,8 @@ class CollectionContent extends PureComponent {
             <ExpansionPanelDetails>
               <Typography>
                 <p>{collection.description}</p>
-                <p>Numbers: {collection.numbers}</p>
               </Typography>
+              { (collection.numbers.length>0) ? numbersList(collection.numbers) : <p>No numbers found</p> }
               <br />
             </ExpansionPanelDetails>
           </ExpansionPanel>

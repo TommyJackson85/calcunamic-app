@@ -2,6 +2,7 @@ const Collection = require('../../models/collection');
 const { transformCollection } = require('./merge');
 const { dateToString } = require('../../helpers/date');
 const User = require('../../models/user');
+const Number = require('../../models/number');
 
 module.exports = {
   collections: async (args, req) => {
@@ -23,12 +24,13 @@ module.exports = {
       throw new Error('Unauthorized!');
     }
     try {
-      //const collections = await Collection.find({_id: {$in: args.collectionsList}});
-      const user = await User.findById(args.userId).populate('createdCollections');
+      const user = await User.findById(args.userId).populate('createdCollections').populate('numbers');
       console.log(user);
+      console.log(user.createCollections);
       return user.createdCollections.map(collection => {
         return transformCollection(collection);
       });
+
     } catch (err) {
       throw err;
     }
@@ -40,13 +42,13 @@ module.exports = {
     const collection = new Collection({
       title: args.collectionInput.title,
       description: args.collectionInput.description,
-      numbers: +args.collectionInput.numbers,
       date: dateToString(args.collectionInput.date),
       creator: req.userId
     });
     let createdCollection;
     try {
       const result = await collection.save();
+    
       createdCollection = transformCollection(result); 
       const creator = await User.findById(req.userId);
 

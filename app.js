@@ -32,13 +32,11 @@ app.use(
   })
 );
 //@cluster2-ygbmu.mongodb.net/test?retryWrites=true&w=majority
+console.log(process.env.MONGO_PASSWORD)
 mongoose
   .connect(
-    `mongodb+srv://${process.env.MONGO_USER}:${
-      process.env.MONGO_PASSWORD
-    }@cluster2-ygbmu.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`
-  )
-  .then(() => {
+    `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster4-ygbmu.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`
+  ).then(() => {
     app.listen(8000);
   })
   .catch(err => {
