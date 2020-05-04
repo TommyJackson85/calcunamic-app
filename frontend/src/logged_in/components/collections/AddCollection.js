@@ -125,7 +125,7 @@ class AddCollection extends PureComponent {
         }
       }`
     }
-    const mutationRequest = (this.state.includeNumbers && this.state.numberFormData.length > 0) ?  createCollectionWithNumbers : createCollection;
+    const mutationRequest = (this.state.includeNumbers && this.state.numberFormData.length > 0) ? createCollectionWithNumbers : createCollection;
     console.log(mutationRequest.query);
     let updatedCollections; //updated from fetch to show updated collections without having to reload collections.
     console.log(this.context.token);

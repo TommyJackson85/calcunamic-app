@@ -12,20 +12,35 @@ const LoggedInComponent = lazy(() => import("./logged_in/components/Main"));
 const LoggedOutComponent = lazy(() => import("./logged_out/components/Main"));
 
 class App extends Component {
+  
   state = {
-    token: null,
-    userId: null
+    token: (localStorage.getItem("token") === "null") ? null : localStorage.getItem("token"),
+    userId: (localStorage.getItem("userId") === "null") ? null : localStorage.getItem("userId"),
+    loggedIn: false
   }
+  static contextType = AuthContext;
+
   login = (token, userId, tokenExpiration) => {
-    this.setState({ token: token, userId: userId, })
+    //needs to log out if token expiration
+    localStorage.setItem("token", token);
+    localStorage.setItem("userId", userId);
+    this.setState({ token: token, userId: userId })
   }
   logout = () => {
-    this.setState({ token: null, userId: null, })
+    //needs to log out if token expiration
+    localStorage.setItem("token", null);
+    localStorage.setItem("userId", null);
+    this.setState({ token: null, userId: null })
   }
   
   render() {
-    console.log(this.state.token);
-    console.log(this.state.userId);
+  
+    console.log("AuthContext:::");
+    console.log(this.context.tokenExpiration);
+    console.log(AuthContext.value);
+    console.log(localStorage);
+    console.log(typeof this.state.token);
+    console.log(typeof this.state.userId);
     return (
       <BrowserRouter>
         <MuiThemeProvider theme={theme}>
@@ -37,8 +52,8 @@ class App extends Component {
             userId: this.state.userId,
             login: this.login,
             logout: this.logout
-            }}
-          >
+          }}> 
+            {console.log(AuthContext.Provider)}
             <Suspense fallback={<Fragment />}>
                 <Switch>
                   {!this.state.token && <Redirect from="/c" to="/" exact />}
