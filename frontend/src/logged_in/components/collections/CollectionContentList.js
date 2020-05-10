@@ -6,6 +6,7 @@ import {
     ListItemText,
     ListItemSecondaryAction,
     Box,
+    Button,
     Grid,
     Typography,
     Avatar,
@@ -40,31 +41,42 @@ const styles = {
     border: "0 0 2px 0",
     borderColor: "black"
   },
+  yellowText: {color: "yellow"}
 };
+const deleteNumber = (numberId, collectionId) => () => {
+  //From here, run a fetch request to delete number from database and the number ref in the collection's numbers listings. 
+  //Re-update the state collections data from the collection file. 
+  console.log(numberId);
+  console.log(collectionId);
+  return collectionId;//change later
+}
 
-const numbersList = (numbers) => {
-    return numbers.map((number, i) => {
+const numbersList = (classes, numbers, collectionId) => {
+  console.log(collectionId);
+  return numbers.map((number, i) => {
       return (
         <Grid key={i}>
-            <Grid item xs={12}>
-            <Typography variant="h6" gutterBottom>
-                {number.value} ~ {number.dataType} ~ Found at: <a href={number.link}></a>
-            </Typography>
-            </Grid>
-            <Grid item xs={12}>
-            <Typography variant="h6" gutterBottom>
-                Created At: {number.createdAt} | Updated At: {number.updatedAt}
-            </Typography>
+            <Grid item xs={12} className={classes.yellowText}>
+              <Typography variant="h6" className={classes.yellowText} gutterBottom>
+                  {number.value} ~ {number.dataType} ~ Found at: <a href={number.link}>{number.link}</a>
+              </Typography>
+              <Button variant="contained" color="secondary" onClick={deleteNumber(number._id, collectionId)}>
+                  Delete
+              </Button>
             </Grid>
         </Grid>
       )
-    })
-  }
+    }
+  )
+}
 
 const collectionsList = (props) => props.collections.map((collection, index) => {
+    console.log(collection.id);
     console.log("checking collections");
+    console.log(collection._id);
     console.log(index);
     const { classes } = props;
+
     return (
       <div key={index} className={classes.panelBorder} >
         <ExpansionPanel>
@@ -97,7 +109,12 @@ const collectionsList = (props) => props.collections.map((collection, index) => 
                         {collection.description}
                     </Typography>
                 </Grid>
-                { (collection.numbers.length>0) ? numbersList(collection.numbers) : (<Grid item xs={12}><Typography variant="p" gutterBottom>No numbers found</Typography></Grid>) }
+                { (collection.numbers.length>0) ? numbersList(classes, collection.numbers, collection._id) : (<Grid item xs={12}><Typography variant="p" gutterBottom>No numbers found</Typography></Grid>) }
+                <Grid item xs={12}>
+                  <Typography variant="h6" gutterBottom>
+                      Created At: {collection.createdAt} | Updated At: {collection.updatedAt}
+                  </Typography>
+                </Grid>
             </Grid>
           </ExpansionPanelDetails>
         </ExpansionPanel>
@@ -109,4 +126,4 @@ collectionsList.propTypes = {
     classes: PropTypes.object.isRequired,
     collections: PropTypes.object.isRequired,
 };
-export default withStyles(styles)(collectionsList);
+export default withStyles(styles)(collectionsList); 

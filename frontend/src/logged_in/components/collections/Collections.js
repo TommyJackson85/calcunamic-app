@@ -16,6 +16,7 @@ class Collections extends PureComponent {
       query: `
         query {
           usersCollections(userId:"${this.context.userId}"){
+            _id
             title
             description
             date
@@ -27,8 +28,6 @@ class Collections extends PureComponent {
               dataType
               collectionsIn { _id }
               creator { _id }
-              createdAt
-              updatedAt
             }
           }
         }
