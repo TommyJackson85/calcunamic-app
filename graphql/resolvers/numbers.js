@@ -90,13 +90,14 @@ module.exports = {
     const result = await number.save();
     return transformNumber(result);
   },
-  deleteNumber: async (args, req) => {
+  deleteNumberInCollection: async (args, req) => {
     if (!req.isAuth){
       throw new Error('Unauthorized!');
     }
     try {
-      const number = await Number.findById(args.numberId).populate('collectionIn');
-      const collectionIn = transformCollection(number.collectionIn);
+      //const number = await Number.findById(args.numberId).populate('collectionIn');
+      const collection = await Collection.findById(args.numberId).populate('numbers');
+      //const collectionIn = transformCollection(number.collectionIn);
       await Number.deleteOne({ _id: args.numberId });
       return collectionIn;
     } catch (err) {

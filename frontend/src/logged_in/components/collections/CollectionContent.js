@@ -73,6 +73,92 @@ class CollectionContent extends PureComponent {
     this.setState({ page });
   };
 
+  deleteNumberHandler = (collectionId, numberId) => {
+    const requestBody = {
+      query: `
+        mutation {
+          deleteNumberFromCollection(collectionId: ${collectionId}, numberId: ${numberId}) {
+            _id
+            title
+            description
+            numbers { 
+              _id
+              value
+              link
+              description
+              dataType
+            }
+            date
+            creator {
+              _id
+              email
+            }
+          }
+        }
+      `
+    };
+
+    fetch('http://localhost:8000/graphql', {
+        method: 'POST',
+        body: JSON.stringify(requestBody),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.context.token}`
+        }
+    })
+      .then(res => {
+          if (res.status !== 200 && res.status !== 201) {
+            console.log("NEW ERROR!!");
+            console.log(res);
+            throw new Error('Failed!');
+          }
+          return res.json();
+      })
+      .then(resData => {
+        console.log(resData);
+        console.log("this.state.collections");
+        console.log(this.props.collections);
+        //folling setState call should add the object so it doesn't need to reload collections.
+          let data;
+          console.log("DATA");
+          data = resData.data.deleteNumberFromCollection;   
+          console.log(data);
+
+          //update frontend data here
+          let data = resData.data.createCollection || resData.data.createCollectionWithNumbers;
+          updatedCollections = [...this.props.collections];
+          console.log("checking collection changes");
+          console.log(updatedCollections);
+          for (i=0; i<=updatedCollections.length-1; i++) {
+            if (updateCollections[i]._id === collectionId){
+              let numbers = updateCollections[i].numbers.filter(number => {
+                return number._id !== numberId;
+              });
+              updateCollections[i].numbers = numbers;
+              console.log("number removed from collection numbers!!!");
+              return updateCollections[i];
+            }
+          }
+          console.log(updatedCollections);
+
+
+          console.log("updatedCollections");
+          console.log(updatedCollections);
+          this.props.updateCollections(updatedCollections);
+          
+        })
+        .catch(err => {
+            console.log(err);
+        });
+
+        setTimeout(() => {
+          pushMessageToSnackbar({
+            text: "Your collection has been uploaded"
+          });
+          onClose();
+        }, 1500);
+    }
+
   render() {
     const classes = styles;
 

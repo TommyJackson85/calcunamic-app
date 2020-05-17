@@ -43,15 +43,8 @@ const styles = {
   },
   yellowText: {color: "yellow"}
 };
-const deleteNumber = (numberId, collectionId) => () => {
-  //From here, run a fetch request to delete number from database and the number ref in the collection's numbers listings. 
-  //Re-update the state collections data from the collection file. 
-  console.log(numberId);
-  console.log(collectionId);
-  return collectionId;//change later
-}
 
-const numbersList = (classes, numbers, collectionId) => {
+const numbersList = (classes, numbers, collectionId, deleteNumber) => {
   console.log(collectionId);
   return numbers.map((number, i) => {
       return (
@@ -60,7 +53,7 @@ const numbersList = (classes, numbers, collectionId) => {
               <Typography variant="h6" className={classes.yellowText} gutterBottom>
                   {number.value} ~ {number.dataType} ~ Found at: <a href={number.link}>{number.link}</a>
               </Typography>
-              <Button variant="contained" color="secondary" onClick={deleteNumber(number._id, collectionId)}>
+              <Button variant="contained" color="secondary" onClick={deleteNumber.bind(this, number._id)}>
                   Delete
               </Button>
             </Grid>
@@ -109,7 +102,7 @@ const collectionsList = (props) => props.collections.map((collection, index) => 
                         {collection.description}
                     </Typography>
                 </Grid>
-                { (collection.numbers.length>0) ? numbersList(classes, collection.numbers, collection._id) : (<Grid item xs={12}><Typography variant="p" gutterBottom>No numbers found</Typography></Grid>) }
+                { (collection.numbers.length>0) ? numbersList(classes, collection.numbers, collection._id, collection.deleteNumber) : (<Grid item xs={12}><Typography variant="p" gutterBottom>No numbers found</Typography></Grid>) }
                 <Grid item xs={12}>
                   <Typography variant="h6" gutterBottom>
                       Created At: {collection.createdAt} | Updated At: {collection.updatedAt}

@@ -124,6 +124,7 @@ class Collections extends PureComponent {
           />
         ) : (
           <CollectionContent
+            updateCollections={this.updateCollections}
             openAddCollectionModal={this.openAddCollectionModal}
             collections={this.state.collections}
             pushMessageToSnackbar={pushMessageToSnackbar}

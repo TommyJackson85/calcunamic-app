@@ -58,7 +58,7 @@ module.exports = buildSchema(`
     type RootMutation {
         createNumber(numberInput: NumberInput): Number
         createCollectionWithNumbers(collectionNumbersInput: CollectionNumbersInput): Collection
-        deleteNumber(numberId: ID!): Collection
+        deleteNumberFromCollection(numberId: ID!, collectionId: ID!): Collection
         createCollection(collectionInput: CollectionInput): Collection
         createUser(userInput: UserInput): User
     }
